@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/commen.css">
+    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/class_table.css">
+    <style>
+        /* 头部 */
+
+        .header {
+            padding: 8px 0;
+            height: 40px;
+            position: sticky;
+            top: 0;
+            left: 0;
+        }
+
+        .header-left {
+            float: left;
+        }
+
+        .logo {
+            /* 使H1标签失去块状独占一行的特性改为行内块状，可以设定宽高并且可以和右侧具有行内特性的元素在一行内排列 */
+            display: inline-block;
+            padding: 5px;
+            margin-right: 16px;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+        .nav {
+            display: inline-block;
+        }
+
+        .nav-item {
+            padding: 8px;
+            font-size: 16px;
+            color: #888;
+        }
+
+        .nav-active {
+            color: #000;
+        }
+
+        .header-right {
+            float: right;
+        }
+
+        .header-right-unlogined {
+            display: inline-block;
+        }
+
+        .header-right-unlogined>a {
+            padding: 6px 12px;
+            display: inline-block;
+            box-sizing: border-box;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn-login {
+            margin-right: 8px;
+            border: 1px solid #007bff;
+        }
+
+        .btn-login:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-reg {
+            border-color: #2a8745;
+            background-color: #2a8745;
+            color: #fff;
+        }
+
+        .btn-reg:hover {
+            background-color: #218138;
+            border-color: #218138;
+            color: #fff;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul,ol,li{
+            list-style: none;
+        }
+        a{
+            color: #000;
+            text-decoration: none;
+        }
+
+        .hidden{
+            display: none;
+        }
+        .class-fix::after{
+            content:"";
+            display: block;
+            clear: both;
+        }
+        .wrapper-1080{
+            display: block;
+            width: 1080px;
+            margin: 0 auto;
+        }
+        .links{
+            width: 800px;
+            box-sizing: border-box;
+            padding: 20px;
+            background-color: #eee;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+        .links h4{
+            text-align: center;
+            border-bottom: 1px solid #aaa;
+        }
+        .links ol li{
+            width: 220px;
+            padding: 10px;
+            margin: 4px;
+            border-radius: 8px;
+            border: 2px solid #aaa;
+            background-color: #fff;
+        }
+        .links ol{
+            width: 100%;
+        }
+        .links ol>li{
+            float:left;
+        }
+        .links a{
+            color: orange;
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <!-- 头部左侧 -->
+        <div class="header-left">
+            <h1 class="logo">NOC 新云课堂</h1>
+            <nav class="nav">
+                <a class="nav-item nav-active" href="#">首页</a>
+                <a class="nav-item" href="#">课程分类</a>
+                <a class="nav-item" href="#">直播课堂</a>
+                <a class="nav-item" href="#">阶段测试</a>
+            </nav>
+        </div>
+        <!-- 头部右侧 -->
+        <div class="header-right">
+            <!-- 未登录 -->
+            <div class="header-right-unlogined">
+                <a href="#" class="btn-login">登录</a>
+                <a href="#" class="btn-reg">注册</a>
+            </div>
+            <!-- 已登陆 -->
+            <!-- <div class="header-right-logined">
+                欢迎,<a href="#">梁某某</a>同学
+            </div> -->
+        </div>
+    </header>
+    <div class="links">
+        <h2 class="player-title">Chrome安装</h2>
+        <video src="./src/video/1.Chrome安装.mp4" id="video" class="video" width="900" controls></video>
+    </div>
+    <!-- 学习资料区域 -->
+    <section class="info links">
+        <table>
+            <!-- <table border="1" width="600"> -->
+            <caption>课程资料</caption>
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>类型</th>
+                <th>获取</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>教案</td>
+                <td>docx</td>
+                <td><a href="#">下载</a></td>
+            </tr>
+            <tr>
+                <td>HTML5手册</td>
+                <td colspan="2"><a href="https://www.w3school.com.cn/html5/index.asp" target="_blank">跳转</a></td>
+            </tr>
+            <tr>
+                <td>腾讯软件中心</td>
+                <td colspan="2"><a href="https://pc.qq.com/" target="_blank">跳转</a></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>本章项目源码</td>
+                <td>zip</td>
+                <td><a href="#">下载</a></td>
+            </tr>
+            </tfoot>
+        </table>
+    </section>
+    <section class="links">
+        <h4>视频列表</h4>
+        <ol class="class-fix">
+            <li class="class_listitem"><a href="#">1 WEB概述</a></li>
+            <li class="class_listitem"><a href="#">2 HTML5概述</a></li>
+            <li class="class_listitem"><a href="#">3 HTML5新特性</a></li>
+            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
+            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
+            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
+            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
+            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
+        </ol>
+    </section>
+    <footer class="footer">
+        <div class="footer__wrapper">
+            <p class="message">
+                公司地址：xx省xxx市xx街xx号<br /> 联系电话：
+                <a href="tel://xxxx-xxxxxxxx">xxxx-xxxxxxxx</a><br /> 详细邮箱：
+                <a href="mailto://xxxxx@xxx.xxx">xxxxx@xxx.xxx</a><br />
+            </p>
+            <p>
+                <img src="./src/images/footer-logo-1.png" width="90" height="30">
+                <img src="./src/images/footer-logo-2.jpg" width="90" height="30">
+            </p>
+            <p>Copyright &copy;2020</p>
+        </div>
+    </footer>
+</body>
+
+</html>
