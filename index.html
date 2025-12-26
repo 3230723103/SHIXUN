@@ -1,240 +1,343 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" href="./css/base.css">
-    <link rel="stylesheet" href="./css/commen.css">
-    <link rel="stylesheet" href="./css/footer.css">
-    <link rel="stylesheet" href="./css/class_table.css">
-    <style>
-        /* 头部 */
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一份礼物</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text: #1a1a1a;
+      --border: #e5e5e5;
+      --accent: #0078d4;
+    }
 
-        .header {
-            padding: 8px 0;
-            height: 40px;
-            position: sticky;
-            top: 0;
-            left: 0;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    body {
+      background: linear-gradient(135deg, #e6f7ff, #f0e6ff);
+      color: var(--text);
+      font-family: "Noto Sans SC", sans-serif;
+    }
 
-        .header-left {
-            float: left;
-        }
+    .start-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85vw;
+      max-width: 450px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      z-index: 999;
+    }
+    .start-modal h3 { margin-bottom: 20px; font-size: 22px; color: var(--text); }
+    .start-modal p { margin-bottom: 25px; font-size: 16px; color: #4a5568; line-height: 1.6; }
+    .start-btn {
+      padding: 12px 40px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .start-btn:hover { background: #0066b2; }
 
-        .logo {
-            /* 使H1标签失去块状独占一行的特性改为行内块状，可以设定宽高并且可以和右侧具有行内特性的元素在一行内排列 */
-            display: inline-block;
-            padding: 5px;
-            margin-right: 16px;
-            font-size: 20px;
-            font-weight: normal;
-        }
+    .snow {
+      position: fixed;
+      color: #ffffff;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.8;
+    }
 
-        .nav {
-            display: inline-block;
-        }
+    .popup {
+      position: fixed;
+      width: 200px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      overflow: hidden;
+      z-index: 2;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out, left 0.6s ease, top 0.6s ease;
+    }
+    .popup.fade-in {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .popup.fade-out {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    .popup.final {
+      width: 320px;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      z-index: 999;
+      animation: pulse 2s infinite 0.5s;
+      transition: none;
+    }
 
-        .nav-item {
-            padding: 8px;
-            font-size: 16px;
-            color: #888;
-        }
+    .popup .header {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: #f3f3f3;
+      border-bottom: 1px solid var(--border);
+    }
+    .popup.final .header {
+      background: var(--accent);
+      border-bottom-color: #0066b2;
+      padding: 8px 12px;
+    }
+    .popup .header .icon { font-size: 12px; }
+    .popup.final .header .icon { color: white; font-size: 16px; }
+    .popup .header .title { font-weight: 800; font-size: 11px; margin: 0; }
+    .popup.final .header .title { color: white; font-size: 14px; }
+    .popup .content { padding: 8px 10px; font-size: 15px; font-weight: 500; text-align: center; }
+    .popup.final .content {
+      font-size: 18px;
+      padding: 15px 10px;
+      line-height: 1.6;
+    }
 
-        .nav-active {
-            color: #000;
-        }
+    .popup.theme-blue .header { background: #e3f2fd; border-bottom-color: #bbdefb; }
+    .popup.theme-blue .content { background: #f1f8ff; }
+    .popup.theme-green .header { background: #e8f5e9; border-bottom-color: #c8e6c9; }
+    .popup.theme-green .content { background: #f1f8f4; }
+    .popup.theme-orange .header { background: #fff3e0; border-bottom-color: #ffe0b2; }
+    .popup.theme-orange .content { background: #fffaf3; }
+    .popup.theme-purple .header { background: #f3e5f5; border-bottom-color: #e1bee7; }
+    .popup.theme-purple .content { background: #faf5fc; }
+    .popup.theme-pink .header { background: #fce4ec; border-bottom-color: #f8bbd0; }
+    .popup.theme-pink .content { background: #fff0f5; }
 
-        .header-right {
-            float: right;
-        }
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.03); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
 
-        .header-right-unlogined {
-            display: inline-block;
-        }
-
-        .header-right-unlogined>a {
-            padding: 6px 12px;
-            display: inline-block;
-            box-sizing: border-box;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .btn-login {
-            margin-right: 8px;
-            border: 1px solid #007bff;
-        }
-
-        .btn-login:hover {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .btn-reg {
-            border-color: #2a8745;
-            background-color: #2a8745;
-            color: #fff;
-        }
-
-        .btn-reg:hover {
-            background-color: #218138;
-            border-color: #218138;
-            color: #fff;
-        }
-        *{
-            margin: 0;
-            padding: 0;
-        }
-        ul,ol,li{
-            list-style: none;
-        }
-        a{
-            color: #000;
-            text-decoration: none;
-        }
-
-        .hidden{
-            display: none;
-        }
-        .class-fix::after{
-            content:"";
-            display: block;
-            clear: both;
-        }
-        .wrapper-1080{
-            display: block;
-            width: 1080px;
-            margin: 0 auto;
-        }
-        .links{
-            width: 800px;
-            box-sizing: border-box;
-            padding: 20px;
-            background-color: #eee;
-            margin: 0 auto;
-            border-radius: 10px;
-        }
-        .links h4{
-            text-align: center;
-            border-bottom: 1px solid #aaa;
-        }
-        .links ol li{
-            width: 220px;
-            padding: 10px;
-            margin: 4px;
-            border-radius: 8px;
-            border: 2px solid #aaa;
-            background-color: #fff;
-        }
-        .links ol{
-            width: 100%;
-        }
-        .links ol>li{
-            float:left;
-        }
-        .links a{
-            color: orange;
-            text-decoration: none;
-        }
-
-    </style>
+    @media (max-width: 640px) {
+      .popup { width: 180px; }
+      .popup.final { width: 85vw; }
+      .popup.final .content { font-size: 16px; }
+    }
+  </style>
 </head>
-
 <body>
-    <!-- 头部 -->
-    <header class="header">
-        <!-- 头部左侧 -->
-        <div class="header-left">
-            <h1 class="logo">NOC 新云课堂</h1>
-            <nav class="nav">
-                <a class="nav-item nav-active" href="#">首页</a>
-                <a class="nav-item" href="#">课程分类</a>
-                <a class="nav-item" href="#">直播课堂</a>
-                <a class="nav-item" href="#">阶段测试</a>
-            </nav>
-        </div>
-        <!-- 头部右侧 -->
-        <div class="header-right">
-            <!-- 未登录 -->
-            <div class="header-right-unlogined">
-                <a href="#" class="btn-login">登录</a>
-                <a href="#" class="btn-reg">注册</a>
-            </div>
-            <!-- 已登陆 -->
-            <!-- <div class="header-right-logined">
-                欢迎,<a href="#">梁某某</a>同学
-            </div> -->
-        </div>
-    </header>
-    <div class="links">
-        <h2 class="player-title">Chrome安装</h2>
-        <video src="./src/video/1.Chrome安装.mp4" id="video" class="video" width="900" controls></video>
-    </div>
-    <!-- 学习资料区域 -->
-    <section class="info links">
-        <table>
-            <!-- <table border="1" width="600"> -->
-            <caption>课程资料</caption>
-            <thead>
-            <tr>
-                <th>名称</th>
-                <th>类型</th>
-                <th>获取</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>教案</td>
-                <td>docx</td>
-                <td><a href="#">下载</a></td>
-            </tr>
-            <tr>
-                <td>HTML5手册</td>
-                <td colspan="2"><a href="https://www.w3school.com.cn/html5/index.asp" target="_blank">跳转</a></td>
-            </tr>
-            <tr>
-                <td>腾讯软件中心</td>
-                <td colspan="2"><a href="https://pc.qq.com/" target="_blank">跳转</a></td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <td>本章项目源码</td>
-                <td>zip</td>
-                <td><a href="#">下载</a></td>
-            </tr>
-            </tfoot>
-        </table>
-    </section>
-    <section class="links">
-        <h4>视频列表</h4>
-        <ol class="class-fix">
-            <li class="class_listitem"><a href="#">1 WEB概述</a></li>
-            <li class="class_listitem"><a href="#">2 HTML5概述</a></li>
-            <li class="class_listitem"><a href="#">3 HTML5新特性</a></li>
-            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
-            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
-            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
-            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
-            <li class="class_listitem"><a href="#">4 Chrome安装</a></li>
-        </ol>
-    </section>
-    <footer class="footer">
-        <div class="footer__wrapper">
-            <p class="message">
-                公司地址：xx省xxx市xx街xx号<br /> 联系电话：
-                <a href="tel://xxxx-xxxxxxxx">xxxx-xxxxxxxx</a><br /> 详细邮箱：
-                <a href="mailto://xxxxx@xxx.xxx">xxxxx@xxx.xxx</a><br />
-            </p>
-            <p>
-                <img src="./src/images/footer-logo-1.png" width="90" height="30">
-                <img src="./src/images/footer-logo-2.jpg" width="90" height="30">
-            </p>
-            <p>Copyright &copy;2020</p>
-        </div>
-    </footer>
-</body>
+  <div class="start-modal" id="startModal">
+    <h3>神秘礼物❄️</h3>
+    <img src="老鸟.jpg" alt="Gift" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px;">
+    <p>给老鸟的生日礼物，<br>确定要打开这份专属惊喜吗？</p>
+    <button class="start-btn" id="startBtn">打开礼物</button>
+  </div>
 
+  <div id="snowContainer"></div>
+  <div id="popupContainer"></div>
+
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="https://sf5-hl-cdn-tos.douyinstatic.com/obj/ies-music/7538982702662699786.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const el = {
+      startModal: document.getElementById('startModal'),
+      startBtn: document.getElementById('startBtn'),
+      snowContainer: document.getElementById('snowContainer'),
+      popupContainer: document.getElementById('popupContainer'),
+      bgMusic: document.getElementById('bgMusic')
+    };
+
+    const config = {
+      batchSize: 3,
+      batchInterval: 300,
+      popupShowDuration: 4000,
+      popupRemoveDelay: 800,
+      tips: [
+        "冬天要多喝热水呀", "天冷记得添件厚衣服~", "今天也要开心呀",
+        "今天要保持微笑", "愿你被生活温柔包裹", "生日快乐",
+        "把烦恼都冻在冬天里", "冬日的温暖送给你", "照顾好自己呀",
+        "愿你的冬天满是阳光", "平安喜乐，温暖过冬", "慢慢相遇，好好生活"
+      ],
+      finalTips: [
+        "这个冬天，愿你有衣暖身，有人暖心，一切顺遂——元野",
+        "寒来暑往，秋收冬藏，愿你所求皆如愿，所行皆坦途——元野",
+        "雪花飘落，美好将至，愿你被世界温柔以待，万事胜意——元野"
+      ],
+      themes: ['theme-blue', 'theme-green', 'theme-orange', 'theme-purple', 'theme-pink']
+    };
+
+    function initSnow() {
+      for (let i = 0; i < 4; i++) createSnow();
+      setInterval(() => createSnow(), 600);
+    }
+
+    function createSnow() {
+      const snow = document.createElement('div');
+      snow.className = 'snow';
+      snow.textContent = '❄️';
+      const left = Math.random() * 100;
+      const size = Math.random() * 6 + 6;
+      const duration = Math.random() * 8 + 6;
+      
+      snow.style.cssText = `
+        left: ${left}vw;
+        top: -20px;
+        font-size: ${size}px;
+        transition: top ${duration}s linear;
+      `;
+      
+      el.snowContainer.appendChild(snow);
+      setTimeout(() => snow.style.top = '100vh', 100);
+      setTimeout(() => snow.remove(), duration * 1000);
+    }
+
+    let popupTimerQueue = [];
+    function startContinuousPopups() {
+      clearAllPopupTimers();
+
+      function createPopupBatch() {
+        for (let i = 0; i < config.batchSize; i++) {
+          const randomDelay = Math.random() * 150;
+          const timer = setTimeout(() => {
+            const theme = config.themes[Math.floor(Math.random() * config.themes.length)];
+            const tip = config.tips[Math.floor(Math.random() * config.tips.length)];
+            const popup = createPopupElement(theme, tip);
+            
+            popup.style.left = `${Math.random() * (window.innerWidth - 210) + 5}px`;
+            popup.style.top = `${Math.random() * (window.innerHeight - 70) + 5}px`;
+            
+            el.popupContainer.appendChild(popup);
+            setTimeout(() => popup.classList.add('fade-in'), 10);
+
+            const fadeTimer = setTimeout(() => {
+              popup.classList.remove('fade-in');
+              popup.classList.add('fade-out');
+              const removeTimer = setTimeout(() => {
+                if (popup.parentNode) popup.remove();
+              }, config.popupRemoveDelay);
+              popupTimerQueue.push(removeTimer);
+            }, config.popupShowDuration);
+            popupTimerQueue.push(fadeTimer);
+          }, randomDelay);
+          popupTimerQueue.push(timer);
+        }
+
+        const nextBatchTimer = setTimeout(createPopupBatch, config.batchInterval);
+        popupTimerQueue.push(nextBatchTimer);
+      }
+
+      createPopupBatch();
+    }
+
+    function clearAllPopupTimers() {
+      popupTimerQueue.forEach(timerId => clearTimeout(timerId));
+      popupTimerQueue = [];
+    }
+
+    function createPopupElement(theme, content) {
+      const popup = document.createElement('div');
+      popup.className = `popup ${theme}`;
+      popup.innerHTML = `
+        <div class="header">
+          <span class="icon">💝</span>
+          <h4 class="title">祝老鸟</h4>
+        </div>
+        <div class="content">${content}</div>
+      `;
+      return popup;
+    }
+
+    function convergeVisiblePopups() {
+      const centerX = window.innerWidth / 2 - 100;
+      const centerY = window.innerHeight / 2 - 30;
+
+      const visiblePopups = Array.from(document.querySelectorAll('.popup:not(.final)')).filter(popup => {
+        return popup.parentNode !== null;
+      });
+
+      visiblePopups.forEach((popup, index) => {
+        popup.classList.remove('fade-out');
+        popup.classList.add('fade-in');
+        popup.style.opacity = '0.8';
+        
+        const randomInterval = Math.random() * 10 + 5;
+        setTimeout(() => {
+          popup.style.left = `${centerX}px`;
+          popup.style.top = `${centerY}px`;
+        }, index * randomInterval);
+      });
+
+      setTimeout(() => {
+        visiblePopups.forEach(popup => {
+          popup.classList.remove('fade-in');
+          popup.classList.add('fade-out');
+          setTimeout(() => {
+            if (popup.parentNode) popup.remove();
+          }, config.popupRemoveDelay);
+        });
+        showFinalPopup();
+      }, 1200);
+    }
+
+    function showFinalPopup() {
+      const tip = config.finalTips[Math.floor(Math.random() * config.finalTips.length)];
+      const popup = document.createElement('div');
+      popup.className = 'popup final theme-blue';
+      popup.innerHTML = `
+        <div class="header">
+          <span class="icon">❄️</span>
+          <h4 class="title">专属祝福</h4>
+        </div>
+        <div class="content">${tip}</div>
+      `;
+      el.popupContainer.appendChild(popup);
+      setTimeout(() => popup.classList.add('fade-in'), 10);
+    }
+
+    function initEvents() {
+      el.startBtn.addEventListener('click', () => {
+        el.startModal.style.opacity = '0';
+        setTimeout(() => el.startModal.remove(), 500);
+        
+        el.bgMusic.loop = false;
+        el.bgMusic.play().catch(err => {
+          document.body.addEventListener('click', () => el.bgMusic.play(), { once: true });
+        });
+        
+        startContinuousPopups();
+
+        el.bgMusic.addEventListener('ended', () => {
+          clearAllPopupTimers();
+          setTimeout(convergeVisiblePopups, 300);
+        }, { once: true });
+      });
+    }
+
+    window.onload = function() {
+      initSnow();
+      initEvents();
+    };
+  </script>
+</body>
 </html>
